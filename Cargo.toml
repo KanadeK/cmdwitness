@@ -1,0 +1,23 @@
+[package]
+name = "cmdwitness"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Evidence-first compatibility checks for two versions of any CLI"
+license = "MIT"
+repository = "https://github.com/KanadeK/cmdwitness"
+homepage = "https://github.com/KanadeK/cmdwitness"
+readme = "README.md"
+keywords = ["cli", "compatibility", "regression", "testing", "ci"]
+categories = ["command-line-utilities", "development-tools::testing"]
+exclude = [".github/", "tasks/", "research/", "docs/", "scripts/"]
+
+[[bin]]
+name = "cmdwitness"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+lto = "thin"
+codegen-units = 1
+
