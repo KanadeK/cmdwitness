@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "normalizers": [
+    { "kind": "ansi" },
+    { "kind": "lineEndings" },
+    { "kind": "slashes" }
+  ],
+  "scenarios": [
+    {
+      "id": "help-surface",
+      "args": ["--help"],
+      "observe": ["help"]
+    },
+    {
+      "id": "machine-json",
+      "args": ["inspect", "--json"],
+      "observe": ["exitCode", "jsonStdout"],
+      "allow": ["json.added"]
+    },
+    {
+      "id": "process-contract",
+      "args": ["process"],
+      "fixtures": [
+        { "path": "input/data.txt", "content": "alpha\n" }
+      ],
+      "observe": ["exitCode", "stderr", "files"]
+    },
+    {
+      "id": "synthetic-workspace",
+      "args": ["cwd"],
+      "observe": ["stdout"]
+    }
+  ]
+}

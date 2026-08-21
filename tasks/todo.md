@@ -16,7 +16,7 @@
   - Acceptance: text/JSON/Markdown/SARIF share finding IDs/counts; exits are
     exactly 0/1/2 per spec; explicit output paths are atomic.
   - Verify: `cargo test cli report`.
-- [ ] Task 5: Ship deterministic fixtures and a real end-to-end demo.
+- [x] Task 5: Ship deterministic fixtures and a real end-to-end demo.
   - Acceptance: demo proves removed help flag, exit drift, JSON type/removal,
     additive key, output normalization, and file-content drift.
   - Verify: run the documented demo and inspect generated report.
