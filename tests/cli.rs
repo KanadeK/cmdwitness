@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::process::Command;
 
 fn cmdwitness() -> Command {
@@ -24,7 +25,7 @@ fn help_and_invalid_command_use_documented_exit_codes() {
 }
 
 #[test]
-fn installed_binary_compares_two_real_command_prefixes() {
+fn relative_binary_paths_are_resolved_before_entering_isolated_workspaces() {
     let spec = std::env::temp_dir().join(format!(
         "cmdwitness-integration-{}.json",
         std::process::id()
@@ -34,18 +35,20 @@ fn installed_binary_compares_two_real_command_prefixes() {
         r#"{"schemaVersion":1,"scenarios":[{"id":"self-contract","observe":["exitCode","stdout"]}]}"#,
     )
     .unwrap();
-    let binary = env!("CARGO_BIN_EXE_cmdwitness");
+    let binary = PathBuf::from(env!("CARGO_BIN_EXE_cmdwitness"));
+    let current_dir = std::env::current_dir().unwrap();
+    let relative_binary = binary.strip_prefix(current_dir).unwrap().to_str().unwrap();
     let output = cmdwitness()
         .args([
             "compare",
             "--spec",
             spec.to_str().unwrap(),
             "--baseline",
-            binary,
+            relative_binary,
             "--baseline-arg",
             "version",
             "--candidate",
-            binary,
+            relative_binary,
             "--candidate-arg",
             "help",
             "--format",

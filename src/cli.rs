@@ -60,7 +60,14 @@ fn run_compare(args: &[String]) -> Result<CliResult, CliError> {
             stdout: HELP.into(),
         });
     }
-    let options = parse_compare_options(args)?;
+    let mut options = parse_compare_options(args)?;
+    let invocation_dir = std::env::current_dir()
+        .map_err(|error| cli_error(format!("could not read current directory: {error}")))?;
+    for target in [&mut options.baseline, &mut options.candidate] {
+        if target.program.is_relative() && target.program.components().count() > 1 {
+            target.program = invocation_dir.join(&target.program);
+        }
+    }
     let input = std::fs::read_to_string(&options.spec).map_err(|error| {
         cli_error(format!(
             "could not read scenario file {}: {error}",
@@ -207,68 +214,7 @@ fn cli_error(message: impl Into<String>) -> CliError {
 }
 
 fn scenario_schema() -> String {
-    let schema = serde_json::json!({
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://github.com/KanadeK/cmdwitness/blob/v0.1.0/schema/cmdwitness-v1.schema.json",
-        "title": "CmdWitness scenario file v1",
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["schemaVersion", "scenarios"],
-        "properties": {
-            "schemaVersion": {"const": 1},
-            "normalizers": {"type": "array", "items": {"$ref": "#/$defs/normalizer"}},
-            "scenarios": {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 128,
-                "items": {"$ref": "#/$defs/scenario"}
-            }
-        },
-        "$defs": {
-            "scenario": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": ["id"],
-                "properties": {
-                    "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,80}$"},
-                    "args": {"type": "array", "items": {"type": "string"}},
-                    "stdin": {"type": "string"},
-                    "env": {"type": "object", "additionalProperties": {"type": "string"}},
-                    "fixtures": {"type": "array", "items": {"$ref": "#/$defs/fixture"}},
-                    "observe": {
-                        "type": "array",
-                        "uniqueItems": true,
-                        "items": {"enum": ["exitCode", "stdout", "stderr", "jsonStdout", "help", "files"]}
-                    },
-                    "allow": {"type": "array", "items": {"type": "string"}},
-                    "normalizers": {"type": "array", "items": {"$ref": "#/$defs/normalizer"}}
-                }
-            },
-            "fixture": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": ["path", "content"],
-                "properties": {
-                    "path": {"type": "string"},
-                    "content": {"type": "string"},
-                    "executable": {"type": "boolean", "default": false}
-                }
-            },
-            "normalizer": {
-                "oneOf": [
-                    {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"const": "ansi"}}},
-                    {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"const": "lineEndings"}}},
-                    {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"const": "slashes"}}},
-                    {"type": "object", "additionalProperties": false, "required": ["kind", "name", "from", "to"], "properties": {
-                        "kind": {"const": "literal"}, "name": {"type": "string"}, "from": {"type": "string", "minLength": 1}, "to": {"type": "string"}
-                    }}
-                ]
-            }
-        }
-    });
-    let mut output = serde_json::to_string_pretty(&schema).expect("serializing schema cannot fail");
-    output.push('\n');
-    output
+    include_str!("../schema/cmdwitness-v1.schema.json").into()
 }
 
 #[cfg(test)]

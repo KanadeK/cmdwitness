@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KanadeK/cmdwitness/blob/v0.1.0/schema/cmdwitness-v1.schema.json",
+  "title": "CmdWitness scenario file v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "scenarios"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "normalizers": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/normalizer" }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": { "$ref": "#/$defs/scenario" }
+    }
+  },
+  "$defs": {
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,80}$"
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "type": "string" }
+        },
+        "stdin": { "type": "string" },
+        "env": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "fixtures": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/fixture" }
+        },
+        "observe": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "exitCode",
+              "stdout",
+              "stderr",
+              "jsonStdout",
+              "help",
+              "files"
+            ]
+          }
+        },
+        "allow": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+        },
+        "normalizers": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/normalizer" }
+        }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "content"],
+      "properties": {
+        "path": { "type": "string" },
+        "content": { "type": "string" },
+        "executable": { "type": "boolean", "default": false }
+      }
+    },
+    "normalizer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "ansi" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "lineEndings" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "slashes" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "name", "from", "to"],
+          "properties": {
+            "kind": { "const": "literal" },
+            "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+            "from": { "type": "string", "minLength": 1 },
+            "to": {
+              "type": "string",
+              "description": "Replacement must not be longer in UTF-8 bytes than from."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

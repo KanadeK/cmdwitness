@@ -18,8 +18,8 @@ not an operating-system sandbox.
 
 - Accept program paths separately from argument arrays; never parse or invoke a
   shell command string.
-- Require the baseline and candidate to resolve to existing files before any
-  scenario runs.
+- Resolve relative program paths against the invocation directory before any
+  scenario runs; delegate bare command names to the operating system's `PATH`.
 - Create a different temporary workspace for every program/scenario pair and
   copy only declared fixture files.
 - Inherit only the minimum launch-critical environment plus explicit scenario
@@ -44,6 +44,5 @@ not an operating-system sandbox.
 
 - Common deterministic CLIs work without Docker or elevated privileges.
 - Interactive TUI/PTY behavior and network isolation are out of scope for v1.
-- Tests must exercise process trees, timeouts, output caps, path traversal, and
-  fixture immutability on Windows and Unix.
-
+- Tests must exercise real processes, timeouts, output caps, path traversal,
+  relative program paths, and fixture immutability on Windows and Unix.

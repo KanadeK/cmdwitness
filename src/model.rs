@@ -182,15 +182,21 @@ fn validate_scenario(scenario: &Scenario) -> Result<(), String> {
 }
 
 fn validate_normalizers(normalizers: &[NormalizerSpec]) -> Result<(), String> {
+    if normalizers.len() > 32 {
+        return Err("normalizers may contain at most 32 entries".into());
+    }
     let mut names = BTreeSet::new();
     for normalizer in normalizers {
         let name = match normalizer {
             NormalizerSpec::Ansi => "ansi",
             NormalizerSpec::LineEndings => "lineEndings",
             NormalizerSpec::Slashes => "slashes",
-            NormalizerSpec::Literal { name, from, .. } => {
+            NormalizerSpec::Literal { name, from, to } => {
                 if name.is_empty() || name.len() > 80 || from.is_empty() {
                     return Err("literal normalizer needs a non-empty name and from value".into());
+                }
+                if to.len() > from.len() {
+                    return Err("literal normalizer replacement may not expand text".into());
                 }
                 name
             }
@@ -311,6 +317,28 @@ mod tests {
         )
         .unwrap_err();
         assert!(bad_literal.contains("literal normalizer"), "{bad_literal}");
+
+        let expanding = Spec::from_json(
+            r#"{"schemaVersion":1,"normalizers":[{"kind":"literal","name":"grow","from":"x","to":"xx"}],"scenarios":[{"id":"bad"}]}"#,
+        )
+        .unwrap_err();
+        assert!(expanding.contains("may not expand"), "{expanding}");
+
+        let normalizers = (0..33)
+            .map(|index| {
+                serde_json::json!({"kind": "literal", "name": format!("n{index}"), "from": "x", "to": "x"})
+            })
+            .collect::<Vec<_>>();
+        let too_many = Spec::from_json(
+            &serde_json::json!({
+                "schemaVersion": 1,
+                "normalizers": normalizers,
+                "scenarios": [{"id": "bad"}]
+            })
+            .to_string(),
+        )
+        .unwrap_err();
+        assert!(too_many.contains("at most 32"), "{too_many}");
     }
 
     #[test]

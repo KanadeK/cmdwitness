@@ -3,10 +3,9 @@ $ErrorActionPreference = "Stop"
 cargo build --locked --bin cmdwitness --examples
 if ($LASTEXITCODE -ne 0) { throw "cargo build failed" }
 
-$suffix = if ($env:OS -eq "Windows_NT") { ".exe" } else { "" }
-$cmdwitness = Join-Path "target/debug" ("cmdwitness" + $suffix)
-$baseline = Join-Path "target/debug/examples" ("baseline_cli" + $suffix)
-$candidate = Join-Path "target/debug/examples" ("candidate_cli" + $suffix)
+$cmdwitness = Join-Path "target/debug" "cmdwitness.exe"
+$baseline = Join-Path "target/debug/examples" "baseline_cli.exe"
+$candidate = Join-Path "target/debug/examples" "candidate_cli.exe"
 $report = "target/demo-report.md"
 
 & $cmdwitness compare --spec examples/scenarios.json --baseline $baseline --candidate $candidate --format markdown --output $report

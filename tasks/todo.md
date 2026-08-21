@@ -10,11 +10,11 @@
   - Verify: `cargo test runner workspace`.
 - [x] Task 3: Implement observation normalization and semantic comparison.
   - Acceptance: exit/output/JSON/help/files classify breaking/additive/allowed;
-    raw evidence hashes and normalizer names remain visible.
+    bounded evidence previews and applied normalizer names remain visible.
   - Verify: `cargo test compare normalize`.
 - [x] Task 4: Implement CLI and four reporters.
   - Acceptance: text/JSON/Markdown/SARIF share finding IDs/counts; exits are
-    exactly 0/1/2 per spec; explicit output paths are atomic.
+    exactly 0/1/2 per spec; report write failures return exit 2.
   - Verify: `cargo test cli report`.
 - [x] Task 5: Ship deterministic fixtures and a real end-to-end demo.
   - Acceptance: demo proves removed help flag, exit drift, JSON type/removal,

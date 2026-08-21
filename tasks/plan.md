@@ -37,6 +37,6 @@ Serde + validated schema
 | --- | --- | --- |
 | Compared command is malicious | High | Document that temp workspaces are not OS sandboxes; no shell, bounded runtime/output, minimal inherited env, explicit local programs only. |
 | Cross-platform process termination differs | High | Dedicated Windows/Unix implementations behind one runner contract and CI on all three OS families. |
-| Normalization hides a breaking change | High | Opt-in normalizers, evidence retains raw hashes and applied normalizer names, no broad fuzzy matching. |
+| Normalization hides a breaking change | High | Opt-in normalizers, evidence retains bounded previews and applied normalizer names, no broad fuzzy matching. |
 | Invalid scenarios | Medium | Deserialize with serde, reject unknown fields, then validate IDs, paths, and limits at the boundary. |
 | Reports disagree | Medium | Generate every format from one typed report and assert shared finding IDs/counts. |

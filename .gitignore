@@ -1,7 +1,7 @@
 /target/
+/dist/
 /.cmdwitness/
 *.actual
 *.profraw
 .DS_Store
 Thumbs.db
-

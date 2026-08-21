@@ -22,15 +22,13 @@ changes, and emits evidence in terminal, JSON, Markdown, or SARIF form.
 ```text
 Build:          cargo build --locked
 Format check:   cargo fmt --all -- --check
-Lint:           cargo clippy --all-targets --all-features -- -D warnings
+Lint:           cargo clippy --all-targets --locked -- -D warnings
 Unit/integration: cargo test --all-targets --locked
-Demo:           cargo run --locked -- compare --spec examples/scenarios.json --baseline fixtures/bin/baseline-cli --candidate fixtures/bin/candidate-cli --format markdown --output target/demo-report.md
+Demo (Windows): powershell -NoProfile -File scripts/demo.ps1
+Demo (Unix):    sh scripts/demo.sh
 Package:        powershell -NoProfile -File scripts/package.ps1 -Version 0.1.0
 Release gate:   powershell -NoProfile -File scripts/release_check.ps1
 ```
-
-On Unix, the demo uses `fixtures/bin/baseline-cli.sh` and
-`fixtures/bin/candidate-cli.sh`.
 
 ## Public CLI contract
 
@@ -99,8 +97,7 @@ Example style:
 ```text
 src/                 CLI, scenario model, runner, diff, reports
 tests/               black-box integration and failure-path tests
-fixtures/bin/        deterministic baseline/candidate demo programs
-examples/            runnable scenario data and expected report
+examples/            deterministic fixture CLIs and runnable scenario data
 research/            dated landscape and differentiation evidence
 docs/decisions/      architecture and security decisions
 tasks/               implementation plan and completion checklist
@@ -116,7 +113,7 @@ scripts/             packaging, checksums, secret scan, release gate
   JSON type/removal/addition, help flag changes, file changes, allowances,
   timeouts, output caps, traversal rejection, and exit semantics.
 - Package smoke: build an archive, verify SHA-256, extract into a clean temp
-  directory, run `version`, `schema`, and the demo comparison from the package.
+  directory, then run `version` and `schema` from the packaged binary.
 - Coverage proxy: every public comparison dimension and every error exit has a
   named test. Rust's standard toolchain has no built-in stable coverage gate;
   the release checklist records the behavioral matrix instead of claiming a
