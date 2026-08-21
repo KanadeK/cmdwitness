@@ -26,7 +26,16 @@ try {
     & (Join-Path $PSScriptRoot "package.ps1") -Version $version -TargetName "windows-x86_64" | Out-Null
 
     $archive = Join-Path $repoRoot "dist/cmdwitness-v$version-windows-x86_64.zip"
-    $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+    $stream = [System.IO.File]::OpenRead($archive)
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $hashBytes = $sha256.ComputeHash($stream)
+        $hash = [System.BitConverter]::ToString($hashBytes).Replace("-", "").ToLowerInvariant()
+    }
+    finally {
+        $sha256.Dispose()
+        $stream.Dispose()
+    }
     "$hash  $([System.IO.Path]::GetFileName($archive))" | Set-Content -LiteralPath (Join-Path $repoRoot "dist/SHA256SUMS.txt") -Encoding ascii
 
     $smoke = [System.IO.Path]::GetFullPath((Join-Path $repoRoot "target/package-smoke"))
