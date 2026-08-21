@@ -8,11 +8,11 @@
   - Acceptance: argv is shell-free; stdin/env/cwd work; timeout/output caps and
     launch errors become typed unknown results; file inventory is deterministic.
   - Verify: `cargo test runner workspace`.
-- [ ] Task 3: Implement observation normalization and semantic comparison.
+- [x] Task 3: Implement observation normalization and semantic comparison.
   - Acceptance: exit/output/JSON/help/files classify breaking/additive/allowed;
     raw evidence hashes and normalizer names remain visible.
   - Verify: `cargo test compare normalize`.
-- [ ] Task 4: Implement CLI and four reporters.
+- [x] Task 4: Implement CLI and four reporters.
   - Acceptance: text/JSON/Markdown/SARIF share finding IDs/counts; exits are
     exactly 0/1/2 per spec; explicit output paths are atomic.
   - Verify: `cargo test cli report`.
