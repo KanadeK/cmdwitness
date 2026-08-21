@@ -4,7 +4,7 @@
   - Acceptance: valid examples parse; invalid types, traversal, duplicate IDs,
     invalid fields and unknown observation modes fail before execution.
   - Verify: `cargo test json scenario`.
-- [ ] Task 2: Implement isolated fixture workspaces and bounded process runner.
+- [x] Task 2: Implement isolated fixture workspaces and bounded process runner.
   - Acceptance: argv is shell-free; stdin/env/cwd work; timeout/output caps and
     launch errors become typed unknown results; file inventory is deterministic.
   - Verify: `cargo test runner workspace`.
