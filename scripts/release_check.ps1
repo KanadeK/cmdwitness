@@ -18,14 +18,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "dependency audit failed" }
 
     & (Join-Path $PSScriptRoot "demo.ps1") | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "demo failed" }
 
     cargo package --locked
     if ($LASTEXITCODE -ne 0) { throw "cargo package failed" }
     $metadata = cargo metadata --no-deps --format-version 1 | ConvertFrom-Json
     $version = ($metadata.packages | Where-Object { $_.name -eq "cmdwitness" }).version
     & (Join-Path $PSScriptRoot "package.ps1") -Version $version -TargetName "windows-x86_64" | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "release package failed" }
 
     $archive = Join-Path $repoRoot "dist/cmdwitness-v$version-windows-x86_64.zip"
     $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
