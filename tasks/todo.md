@@ -20,11 +20,11 @@
   - Acceptance: demo proves removed help flag, exit drift, JSON type/removal,
     additive key, output normalization, and file-content drift.
   - Verify: run the documented demo and inspect generated report.
-- [ ] Task 6: Complete docs, ADRs, repair guide, CI, and packaging.
+- [x] Task 6: Complete docs, ADRs, repair guide, CI, and packaging.
   - Acceptance: clean-clone commands, troubleshooting, threat model, platform
     archives, checksums, and package smoke are executable and documented.
   - Verify: `scripts/release_check.ps1` plus CI matrix.
-- [ ] Task 7: Independent five-axis review and public release closure.
+- [x] Task 7: Independent five-axis review and public release closure.
   - Acceptance: no critical/required review findings; clean Git history; public
     CI/tag/Release/assets/contributors verified; completion email sent.
   - Verify: remote API evidence and downloaded asset hash comparison.
