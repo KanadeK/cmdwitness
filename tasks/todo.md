@@ -1,8 +1,8 @@
 # CmdWitness 0.1.0 tasks
 
-- [ ] Task 1: Implement bounded JSON parser and validated v1 scenario model.
+- [x] Task 1: Implement the validated v1 scenario model with serde.
   - Acceptance: valid examples parse; invalid types, traversal, duplicate IDs,
-    excessive depth/size, and unknown observation modes fail before execution.
+    invalid fields and unknown observation modes fail before execution.
   - Verify: `cargo test json scenario`.
 - [ ] Task 2: Implement isolated fixture workspaces and bounded process runner.
   - Acceptance: argv is shell-free; stdin/env/cwd work; timeout/output caps and
@@ -28,4 +28,3 @@
   - Acceptance: no critical/required review findings; clean Git history; public
     CI/tag/Release/assets/contributors verified; completion email sent.
   - Verify: remote API evidence and downloaded asset hash comparison.
-

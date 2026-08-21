@@ -13,9 +13,8 @@ changes, and emits evidence in terminal, JSON, Markdown, or SARIF form.
 ## Tech stack
 
 - Rust 2024 edition, MSRV 1.85.
-- Standard library only. No runtime or build dependencies.
-- JSON is implemented with a bounded project-owned parser so binaries stay
-  self-contained and dependency/supply-chain exposure remains minimal.
+- `serde`/`serde_json` for the versioned JSON boundary and `wait-timeout` for
+  portable process timeouts. The shipped binary has no runtime dependencies.
 - GitHub Actions builds and tests on Linux, macOS, and Windows.
 
 ## Commands
@@ -72,7 +71,7 @@ Example style:
 ```json
 {
   "schemaVersion": 1,
-  "normalizers": [{"name": "ansi", "builtin": "ansi"}],
+  "normalizers": [{"kind": "ansi"}],
   "scenarios": [{
     "id": "machine-output",
     "args": ["inspect", "--json"],
@@ -98,7 +97,7 @@ Example style:
 ## Project structure
 
 ```text
-src/                 CLI, JSON parser, scenario model, runner, diff, reports
+src/                 CLI, scenario model, runner, diff, reports
 tests/               black-box integration and failure-path tests
 fixtures/bin/        deterministic baseline/candidate demo programs
 examples/            runnable scenario data and expected report
@@ -111,7 +110,7 @@ scripts/             packaging, checksums, secret scan, release gate
 
 ## Testing strategy
 
-- Unit tests: JSON parsing/serialization, validation, normalization,
+- Unit tests: scenario deserialization/validation, normalization,
   classification, help parsing, file inventory, and report escaping.
 - Integration tests: real fixture processes for exit-code drift, stdout/stderr,
   JSON type/removal/addition, help flag changes, file changes, allowances,
@@ -130,7 +129,7 @@ Always:
 - execute programs without a shell;
 - use separate temporary directories and cap time/output/file traversal;
 - validate all paths and schema fields before running a command;
-- preserve evidence for every classified difference;
+- preserve concise evidence for every classified difference;
 - keep deterministic reports except for an explicit tool version field.
 
 Ask first:
@@ -163,4 +162,3 @@ Never:
 
 None for 0.1.0. PTY/TUI capture, automatic package installation, and networked
 commands are explicitly deferred beyond the current security boundary.
-
