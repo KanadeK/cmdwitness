@@ -3,6 +3,13 @@
 All notable user-facing changes are documented here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-08-21
+
+### Fixed
+
+- Release publication now checks out the tagged repository before verifying
+  the tag and creating the GitHub Release.
+
 ## [0.1.0] - 2026-08-21
 
 ### Added

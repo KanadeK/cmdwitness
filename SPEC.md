@@ -1,4 +1,4 @@
-# Spec: CmdWitness 0.1.0
+# Spec: CmdWitness 0.1.1
 
 ## Objective
 
@@ -26,7 +26,7 @@ Lint:           cargo clippy --all-targets --locked -- -D warnings
 Unit/integration: cargo test --all-targets --locked
 Demo (Windows): powershell -NoProfile -File scripts/demo.ps1
 Demo (Unix):    sh scripts/demo.sh
-Package:        powershell -NoProfile -File scripts/package.ps1 -Version 0.1.0
+Package:        powershell -NoProfile -File scripts/package.ps1 -Version 0.1.1
 Release gate:   powershell -NoProfile -File scripts/release_check.ps1
 ```
 
@@ -157,5 +157,5 @@ Never:
 
 ## Open questions
 
-None for 0.1.0. PTY/TUI capture, automatic package installation, and networked
+None for 0.1.1. PTY/TUI capture, automatic package installation, and networked
 commands are explicitly deferred beyond the current security boundary.
