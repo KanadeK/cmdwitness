@@ -13,3 +13,4 @@ $demoExit = $LASTEXITCODE
 if ($demoExit -ne 1) { throw "expected compatibility break exit 1, got $demoExit" }
 
 Get-Content -LiteralPath $report -Raw
+exit 0
